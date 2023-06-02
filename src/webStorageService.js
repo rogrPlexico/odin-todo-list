@@ -1,14 +1,14 @@
 // this module handles storage of list objects in browser Web Storage API
 
-import { createList } from "./listHandler";
+import { createRTMList } from "./listHandler";
 import { getCreateTaskProto } from "./taskHandler";
 
-export function storeList(listObj) {
+export function storeListToWeb(listObj) {
     let strungObject = JSON.stringify(listObj);
     localStorage.setItem('rootList', strungObject);
 }
 
-export function getStoredList(key) {
+export function getListFromWebStore(key) {
     let strungList = localStorage.getItem(key);
     let parsedList = JSON.parse(strungList);
     
@@ -21,7 +21,7 @@ export function getStoredList(key) {
     }
 
     // add back prototype for list
-    let rootList = Object.create(createList.proto);
+    let rootList = Object.create(createRTMList.proto);
     Object.assign(rootList, parsedList);
 
     return rootList;

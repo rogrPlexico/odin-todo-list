@@ -1,54 +1,85 @@
+import * as displayService from "./displayService";
+
 let rootList;
-let listIDIterator = 0;
+let listIdIterator = 0;
 let listArray = [];
+let rootListCreatedBool = false;
 
-export function createList(listName) {
-    // conditional statement prevents creation of more than one list with listName 'rootList'
-    if (listName != 'rootList' || (listName == 'rootList' && listIDIterator == 0)) {
-        let list = Object.create(createList.proto);
+export function createRTMList(listName) {
+
+    // conditional statement pervents creation of more than one list with listName 'rootList'
+    if (rootListCreatedBool == true && listName == 'rootList') {
+        console.error('rootList is a reserved name');
+    } else {
+        let list = Object.create(createRTMList.proto);
+  
         list.properties = {};
-        list.properties._name = listName;
-        list.properties._listID = listIDIterator++;
-    
-        // if not root list, give list method to modify name
-        if (list.properties._listID !== 0) {
-            list.prototype.setListName = function(newName) {
-                this.properties._listName = newName;0
-            };
-        }
-        // if not root list, add to listArray (root list is stored in 'rootList' variable);
-        if (list.properties._listID !== 0) {
-            listArray.push(list);
-        } else {
-            return list;
-        } 
+        // make the nested 'properties' object non-enumerable
+        Object.defineProperty(list, 'properties', {
+            enumerable: false,
+        }),
+        list.properties._listName = listName;
+        let listId = listIdIterator;
+        list.properties._listId = listId;
 
+        listIdIterator++;
+    
+        // if not root list, push to array 
+        if (rootListCreatedBool == true) {
+            listArray.push(list);
+        // if root list:
+            // override setName method to prevent name modification, 
+            // make the setName method non-enumerable, 
+            // flip rootListCreated to true, 
+            // store list in rootList variable (rootList is not stored in the array--probably poor design, doing this to practice different techniques for storing objects)
+        } else {
+            list.setListName = () => console.error('Cannot change the name of rootList');
+            Object.defineProperty(list, 'setListName', {
+                enumerable: false,
+            }),
+            rootListCreatedBool = true;
+            rootList = list;
+            return list;
+        }   
     }
 }
 
-createList.proto = {
+createRTMList.proto = {
     getList: function() {
         return this;
     },
     getListName: function() {
-        return this._name;
+        return this.properties._listName;
     },
     getListID: function() {
-        return this._listID;
-    }
+        return this.properties._listId;
+    },
+    setListName: function(newName) {
+        this.properties._listName = newName;
+    },
 };
 
-export function createRootList() {
-    rootList = createList('rootList');
+export function getListArray() {
+    return listArray;
 }
 
-export function getRootList() {
-    return rootList;
+export function getList(listId) {
+    if (listId == 0) {
+        return rootList;
+    } else {
+        return listArray.find((item) => item.properties._listId == listId);
+    }
 }
+
+// **rootList functions**
+
+
+
 
 export function updateRootList(updatedRootList) {
     rootList = updatedRootList;
 }
+
 
 
 

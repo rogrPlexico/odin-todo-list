@@ -1,8 +1,10 @@
+import './style.css';
+
 import * as listHandler from "./listHandler";
 import * as taskHandler from  "./taskHandler";
-// import * as taskModifier from "./taskModifier.js";
 import * as webStorageService from "./webStorageService";
-import * as rootListWebStorageService from "./rootListWebStorageService";
+import * as servicesInterface from "./servicesInterface";
+import * as displayService from "./displayService";
 
 
 // ****STATIC PRINT FUNCTION FOR DEBUGGING (prints objects statically instead of passing by reference for debugging purposes)******to delete*****
@@ -12,47 +14,44 @@ export function stprint (x) {
 }
 ///////////////
 
-listHandler.createRootList();
+servicesInterface.createRootList();
+
 
 // example add tasks to root list 
-//INTERFACE NEEDS TO BE ADDED to combine (addTask = addTask + storeList)
-taskHandler.addTask('Do dishes', undefined, undefined, 2, undefined);
-rootListWebStorageService.storeRootList();
+servicesInterface.addTask(0, 'Do dishes', undefined, undefined, 2, undefined);
+servicesInterface.addTask(0, 'ducks');
+servicesInterface.addTask(0, 'what');
 
-taskHandler.addTask('ducks');
-rootListWebStorageService.storeRootList();
+// // example get task
+// let task0 = taskHandler.getTask(0);
+// task0.setProject('Tortles');
 
-taskHandler.addTask('what');
-rootListWebStorageService.storeRootList();
+// let task2 = taskHandler.getTask(2);
+// task2.setTaskPriority(1);
 
-// example get task
-let task0 = taskHandler.getTask(0);
-task0.setProject('Tortles');
-stprint(task0);
+// // storageService.storeRootList(rootList);
 
-let task2 = taskHandler.getTask(2);
-task2.setTaskPriority(1);
+// let retrievedList = servicesInterface.getStoredRootList();
 
-// storageService.storeRootList(rootList);
+// // listHandler.updateRootList(retrievedList);
 
-let retrievedList = rootListWebStorageService.getStoredRootList();
-
-// listHandler.updateRootList(retrievedList);
-
-let gotRoot = listHandler.getRootList();
+// let gotRoot = listHandler.getRootList();
 
 
 
 
-gotRoot[0].setProject('web api done not fucked it up');
-let x = listHandler.getRootList();
+// gotRoot[0].setProject('web api working');
+// let x = listHandler.getRootList();
 
-taskHandler.removeTask(1);
+// taskHandler.removeTask(1);
 
- console.log(listHandler.getRootList());
+// // listHandler.createList('otherStuff')
 
 
-// storageService.retrieveRootListFromStorage();
+
+
+
+// // storageService.retrieveRootListFromStorage();
 
 
 

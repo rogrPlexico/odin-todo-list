@@ -1,13 +1,13 @@
-import { getRootList } from "./listHandler";
+import { getRootList } from "./servicesInterface";
 import { stprint } from "./index.js";
 
 let taskIDIterator = 0;
 
 // creates task and returns it. Does not add task to rootList
-function createTask(taskTitle, taskDescription, taskDueDate, taskPriortity, project) {
+function createRTMTask(taskTitle, taskDescription, taskDueDate, taskPriortity, project) {
     // let rootList = getRootList();
-    // let rootListPrototype = Object.getPrototypeOf(rootList);
-    let task = Object.create(createTask.proto);
+    // let rootListPrototype = Object.getPrototyprootList);
+    let task = Object.create(createRTMTask.proto);
     
     // _underscored properties should not be accessed directly
     task._taskID = taskIDIterator++;
@@ -20,7 +20,7 @@ function createTask(taskTitle, taskDescription, taskDueDate, taskPriortity, proj
     return task;
 }
 
-createTask.proto = {
+createRTMTask.proto = {
     // accessor functions allow for ability to add logic later (eg, processing, validation, etc)
     getTask: function(taskID) {
         let rootList = getRootList();
@@ -65,13 +65,18 @@ createTask.proto = {
     }
 };
 
+Object.defineProperty(createRTMTask.proto, 'getList', {
+    enumerable: false,
+    }
+)
+
 export function getCreateTaskProto() {
-    return createTask.proto;
+    return createRTMTask.proto;
 }
 
 // add task to rootList
-export function addTask(taskTitle, taskDescription = null, taskDueDate = null, taskPriortity = 3, project = 'default') {
-    let newTask = createTask(taskTitle, taskDescription, taskDueDate, taskPriortity, project);
+export function addTaskToRTMList(listId, taskTitle, taskDescription = null, taskDueDate = null, taskPriortity = 3, project = 'default') {
+    let newTask = createRTMTask(listId, taskTitle, taskDescription, taskDueDate, taskPriortity, project);
     let taskID = newTask._taskID;
     // object is stored under taskID as key/name
     let rootList = getRootList();
@@ -79,13 +84,13 @@ export function addTask(taskTitle, taskDescription = null, taskDueDate = null, t
     return newTask;
 }
 
-export function getTask(taskID) {
-    return getRootList()[taskID];
-}
+// export function getTask(listId, taskID) {
+//     return getList(listId)[taskID];
+// }
 
-export function removeTask(taskID) {
-    let rootList = getRootList();
-    delete rootList[taskID];
-}
+// export function removeTask(listId, taskID) {
+//     let rootList = getRootList();
+//     delete rootList[taskID];
+// }
 
 
